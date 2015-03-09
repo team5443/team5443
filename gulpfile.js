@@ -49,23 +49,39 @@ function compileView(view){
 }
 
 gulp.task("copy", function(){
-	var files = [
-		"app/vendor/angular/angular.min.js",
-		"app/vendor/angular-animate/angular-animate.min.js",
-		"app/vendor/angular-aria/angular-aria.min.js",
-		"app/vendor/angular-material/angular-material.min.js",
-		"app/vendor/angular-material/angular-material.min.css",
-		"app/vendor/angular-route/angular-route.min.js",
-		"app/vendor/angular/angular.min.js.map",
-		"app/vendor/angular-aria/angular-aria.min.js.map",
-		"app/vendor/angular-route/angular-route.min.js.map",
-		"app/vendor/angular-animate/angular-animate.min.js.map",
-		"app/vendor/angular/angular.min.js.map"
-	]
-
-	return gulp.src(files)
-		.pipe(gulp.dest("dist/vendor"));
+	fs.readdir("app/vendor", function(err, dep){
+		var dir, file_to_copy;
+		if(err){
+			console.log(err);
+		}else {
+			for(i in dep){
+				dir = dep[i];
+				copy(dir);
+			}
+		}
+	});
 });
+
+function copy(dir){
+	fs.readdir("app/vendor/" + dir, function(err, files){
+		if(err){
+			console.log(err);
+		}else {
+			for(j in files){
+				var file = files[j];
+				if(file.indexOf(".min") > -1){
+					switch(file.split(".").pop()){
+						case "js":
+						case "css":
+						case "map":
+							gulp.src("app/vendor/" + dir+ "/" + file).pipe(gulp.dest("dist/vendor"));
+					}
+					
+				}
+			}
+		}
+	});
+}
 
 gulp.task('watch', function() {
  	gulp.watch(['app/index.jade', 'app/includes/**/*.jade'], ['jade']);
