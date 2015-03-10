@@ -50,12 +50,11 @@ function compileView(view){
 
 gulp.task("copy", function(){
 	fs.readdir("app/vendor", function(err, dep){
-		var dir, file_to_copy;
 		if(err){
 			console.log(err);
 		}else {
 			for(i in dep){
-				dir = dep[i];
+				var dir = dep[i];
 				copy(dir);
 			}
 		}
