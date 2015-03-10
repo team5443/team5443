@@ -74,6 +74,7 @@ function copy(dir){
 						case "css":
 						case "map":
 							gulp.src("app/vendor/" + dir+ "/" + file).pipe(gulp.dest("dist/vendor"));
+							break;
 					}
 					
 				}
