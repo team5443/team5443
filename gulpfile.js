@@ -36,17 +36,18 @@ gulp.task('jade:views', function(){
 		}else {
 			for(i in views){
 				var view = views[i];
-				compileView(view)
+				compileView(view);
 			}
 		}	
 	});
-});
 
-function compileView(view){
-	return gulp.src('app/views/' + view + '/index.jade')
-				.pipe(jade())
-				.pipe(gulp.dest('dist/views/' + view));
-}
+	function compileView(view){
+		return gulp.src('app/views/' + view + '/index.jade')
+					.pipe(jade())
+					.pipe(gulp.dest('dist/views/' + view));
+	}
+
+});
 
 gulp.task("copy", function(){
 	fs.readdir("app/vendor", function(err, dep){
@@ -54,50 +55,40 @@ gulp.task("copy", function(){
 		if(err){
 			console.log(err);
 		}else {
-			for(i in dep){
+			for(var i in dep){
 				dir = dep[i];
 				copy(dir);
 			}
 		}
 	});
-});
 
-function copy(dir){
-	fs.readdir("app/vendor/" + dir, function(err, files){
-		if(err){
-			console.log(err);
-		}else {
-			for(j in files){
-				var file = files[j];
-				if(file.indexOf(".min") > -1){
-					switch(file.split(".").pop()){
-						case "js":
-						case "css":
-						case "map":
-							gulp.src("app/vendor/" + dir+ "/" + file).pipe(gulp.dest("dist/vendor"));
+	function copy(dir){
+		fs.readdir("app/vendor/" + dir, function(err, files){
+			if(err){
+				console.log(err);
+			}else {
+				for(var j in files){
+					var file = files[j];
+					if(file.indexOf(".min") > -1){
+						switch(file.split(".").pop()){
+							case "js":
+							case "css":
+							case "map":
+								gulp.src("app/vendor/" + dir+ "/" + file).pipe(gulp.dest("dist/vendor"));
+						}
+						
 					}
-					
 				}
 			}
-		}
-	});
-}
+		});
+	}
+});
 
 gulp.task('watch', function() {
  	gulp.watch(['app/index.jade', 'app/includes/**/*.jade'], ['jade']);
  	gulp.watch('app/css/**/*.styl', ['stylus']);
  	gulp.watch('app/js/**/*.js', ['js']);
-
- 	fs.readdir("app/views", function(err, views){
-		if(err){
-			console.log(err);
-		} else {
-			for(i in views){
-				var view = views[i];
-				gulp.watch("app/views/" + view + "/index.jade", compileView(view));
-			}
-		}
-	})
+ 	gulp.watch('app/views/**/*.jade', ['jade:views']);
 });
 
 gulp.task('connect', ['build'], function(done) {
