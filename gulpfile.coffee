@@ -28,11 +28,8 @@ gulp.task 'jade', () ->
 
 gulp.task 'jade:views', () ->
   fs.readdir 'app/views', (err, views) ->
-    if err
-      console.log err
-    else
-      compile view for view in views
-      return
+    if err then console.log err else compile view for view in views
+    return
 
   compile = (view) ->
     gulp.src "app/views/#{view}/index.jade"
@@ -43,27 +40,22 @@ gulp.task 'jade:views', () ->
 
 gulp.task 'copy', () ->
   fs.readdir 'app/vendor', (err, dep) ->
-    if err
-      console.log err
-    else
-      copy dir for dir in dep
-      return
-
-  gulp.src 'app/vendor/angular-ui-router/release/angular-ui-router.min.js'
-    .pipe gulp.dest 'dist/vendor'
+    if err then console.log err else for dir in dep
+      if dir is 'angular-ui-router'
+        gulp.src "app/vendor/#{dir}/release/#{dir}.min.js"
+          .pipe gulp.dest 'dist/vendor'
+      else copy dir
+    return
 
   copy = (dir) ->
     fs.readdir "app/vendor/#{dir}", (err, files) ->
-      if err
-        console.log err
-      else
-        for file in file
-          if file.indexOf '.min' > -1
-            switch file.split('.').pop()
-              when 'js', 'css', 'map'
-                gulp.src "app/vendor/#{dir}/#{file}"
-                  .pipe gulp.dest 'dist/vendor'
-                return
+      if err then console.log err else for file in files
+        if file.indexOf '.min' > -1
+          switch file.split('.').pop()
+            when 'js', 'css', 'map'
+              gulp.src "app/vendor/#{dir}/#{file}"
+                .pipe gulp.dest 'dist/vendor'
+              return
     return
   return
 
