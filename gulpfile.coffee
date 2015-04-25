@@ -1,112 +1,91 @@
-var gulp = require("gulp"),
-	gutil = require("gulp-util"),
-	concat = require("gulp-concat"),
-	jade = require("gulp-jade"),
-	stylus = require("gulp-stylus"),
-	uglify = require("gulp-uglify"),
-	ghpages = require("gh-pages"),
-	connect = require("gulp-connect"),
-	opn = require("opn"),
-	fs = require("fs"),
-	path = require("path");
+gulp = require 'gulp'
+gutil = require 'gulp-util'
+concat = require 'gulp-concat'
+jade = require 'gulp-jade'
+stylus = require 'gulp-stylus'
+uglify = require 'gulp-uglify'
+ghpages = require 'gh-pages'
+connect = require 'gulp-connect'
+opn = require 'opn'
+fs = require 'fs'
+path = require 'path'
 
-gulp.task("js", function(){
-	return gulp.src("app/js/**/*.js")
-		.pipe(concat("app.js"))
-		.pipe(uglify())
-		.pipe(gulp.dest("dist/js"));
-});
+gulp.task 'js', () ->
+  gulp.src 'app/js/**/*.js'
+		.pipe concat 'app.js'
+		.pipe uglify()
+		.pipe gulp.dest('dist/js')
 
-gulp.task("stylus", function(){
-	return gulp.src("app/css/app.styl")
-		.pipe(stylus({compress:true}))
-		.pipe(gulp.dest("dist/css"))
-});
+gulp.task 'stylus', () ->
+  gulp.src 'app/css/app.styl'
+    .pipe stylus compress: true
+    .pipe gulp.dest 'dist/css'
 
-gulp.task("jade", function(){
-	return gulp.src("app/index.jade")
-		.pipe(jade())
-		.pipe(gulp.dest("dist"));
-});
+gulp.task 'jade', () ->
+  gulp.src 'app/index.jade'
+    .pipe jade()
+    .pipe gulp.dest 'dist'
 
-gulp.task('jade:views', function(){
-	fs.readdir('app/views', function(err, views){
-		if(err){
-			console.log(err);
-		}else {
-			for(i in views){
-				var view = views[i];
-				compileView(view);
-			}
-		}
-	});
+gulp.task 'jade:views', () ->
+  fs.readdir 'app/views', (err, views) ->
+    if err
+      console.log err
+    else
+      compile view for view in views
+      return
 
-	function compileView(view){
-		return gulp.src('app/views/' + view + '/index.jade')
-					.pipe(jade())
-					.pipe(gulp.dest('dist/views/' + view));
-	}
+  compile = (view) ->
+    gulp.src "app/views/#{view}/index.jade"
+      .pipe jade()
+      .pipe gulp.dest "dist/views/#{view}"
 
-});
+  return
 
-gulp.task("copy", function(){
-	fs.readdir("app/vendor", function(err, dep){
-		var dir, file_to_copy;
-		if(err){
-			console.log(err);
-		}else {
-			for(var i in dep){
-				dir = dep[i];
-				copy(dir);
-			}
-		}
+gulp.task 'copy', () ->
+  fs.readdir 'app/vendor', (err, dep) ->
+    if err
+      console.log err
+    else
+      copy dir for dir in dep
+      return
 
-		gulp.src('app/vendor/angular-ui-router/release/angular-ui-router.min.js')
-		.pipe(gulp.dest('dist/vendor'));
-	});
+  gulp.src 'app/vendor/angular-ui-router/release/angular-ui-router.min.js'
+    .pipe gulp.dest 'dist/vendor'
 
-	function copy(dir){
-		fs.readdir("app/vendor/" + dir, function(err, files){
-			if(err){
-				console.log(err);
-			}else {
-				for(var j in files){
-					var file = files[j];
-					if(file.indexOf(".min") > -1){
-						switch(file.split(".").pop()){
-							case "js":
-							case "css":
-							case "map":
-								gulp.src("app/vendor/" + dir+ "/" + file).pipe(gulp.dest("dist/vendor"));
-						}
+  copy = (dir) ->
+    fs.readdir "app/vendor/#{dir}", (err, files) ->
+      if err
+        console.log err
+      else
+        for file in file
+          if file.indexOf '.min' > -1
+            switch file.split('.').pop()
+              when 'js', 'css', 'map'
+                gulp.src "app/vendor/#{dir}/#{file}"
+                  .pipe gulp.dest 'dist/vendor'
+                return
+    return
+  return
 
-					}
-				}
-			}
-		});
-	}
-});
+gulp.task 'watch', () ->
+  gulp.watch ['app/index.jade', 'app/includes/**/*.jade'], ['jade']
+  gulp.watch 'app/css/**/*.styl', ['stylus']
+  gulp.watch 'app/js/**/*.js', ['js']
+  gulp.watch 'app/views/**/*.jade', ['jade:views']
+  return
 
-gulp.task('watch', function() {
- 	gulp.watch(['app/index.jade', 'app/includes/**/*.jade'], ['jade']);
- 	gulp.watch('app/css/**/*.styl', ['stylus']);
- 	gulp.watch('app/js/**/*.js', ['js']);
- 	gulp.watch('app/views/**/*.jade', ['jade:views']);
-});
+gulp.task 'connect', ['build'], (done) ->
+  connect.server
+    root: 'dist'
+    livereload: true
 
-gulp.task('connect', ['build'], function(done) {
- 	connect.server({
-   		root: 'dist',
-    	livereload: true
-  	});
+  opn 'https://localhost:8080', done
+  return
 
-  	opn('http://localhost:8080', done);
-});
+gulp.task 'deploy', ['build'], (done) ->
+  ghpages.publish path.join(__dirname, 'dist'), logger: gutil.log, done
+  return
 
-gulp.task('deploy', ['build'], function(done) {
-  	ghpages.publish(path.join(__dirname, 'dist'), { logger: gutil.log }, done);
-});
-
-gulp.task('build', ['js', 'jade', 'jade:views', 'stylus', 'copy']);
-gulp.task('serve', ['connect', 'watch']);
-gulp.task('default', ['build']);
+gulp.task 'build', ['js', 'jade', 'jade:views', 'stylus', 'copy']
+gulp.task 'serve', ['connect', 'watch']
+gulp.task 'default', ['build']
