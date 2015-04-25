@@ -38,7 +38,7 @@ gulp.task('jade:views', function(){
 				var view = views[i];
 				compileView(view);
 			}
-		}	
+		}
 	});
 
 	function compileView(view){
@@ -60,6 +60,9 @@ gulp.task("copy", function(){
 				copy(dir);
 			}
 		}
+
+		gulp.src('app/vendor/angular-ui-router/release/angular-ui-router.min.js')
+		.pipe(gulp.dest('dist/vendor'));
 	});
 
 	function copy(dir){
@@ -76,7 +79,7 @@ gulp.task("copy", function(){
 							case "map":
 								gulp.src("app/vendor/" + dir+ "/" + file).pipe(gulp.dest("dist/vendor"));
 						}
-						
+
 					}
 				}
 			}
