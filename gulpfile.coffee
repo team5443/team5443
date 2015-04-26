@@ -55,7 +55,7 @@ gulp.task 'copy', () ->
             when 'js', 'css', 'map'
               gulp.src "app/vendor/#{dir}/#{file}"
                 .pipe gulp.dest 'dist/vendor'
-              return
+            else return
     return
   return
 
