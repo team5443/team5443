@@ -61,9 +61,6 @@ gulp.task 'jade:views', () ->
 gulp.task 'del:tmp', (done) ->
   del ['tmp'], done; return
 
-gulp.task 'clean', (done) ->
-  del ['dist'], done; return
-
 gulp.task 'watch', () ->
   gulp.watch ['app/index.jade', 'app/includes/**/*.jade'], ['jade']
   gulp.watch 'app/css/**/*.styl', ['css']
@@ -78,8 +75,8 @@ gulp.task 'connect', ['build'], (done) ->
   open 'http://localhost:8080', done; return
 
 gulp.task 'deploy', ['build'], (done) ->
-  gh.publish path.join(__dirname, 'dist'), logger: gutil.log, done; return
+  gh.publish path.join(__dirname, 'dist'), logger: $.util.log, done; return
 
-gulp.task 'build', ['clean', 'js', 'jade', 'jade:views', 'css', 'res']
+gulp.task 'build', ['js', 'jade', 'jade:views', 'css', 'res']
 gulp.task 'serve', ['connect', 'watch']
 gulp.task 'default', ['build']

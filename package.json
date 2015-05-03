@@ -6,7 +6,7 @@
   "dependencies": {
     "angular-material": "~0.8.3",
     "angular-ui-router": "~0.2.13",
-    "angular-translate": "~2.6.1"
+    "angular-translate": "~2.7.0"
   },
   "devDependencies": {
     "coffee-script": "^1.9.2",
