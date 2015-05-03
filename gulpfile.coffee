@@ -17,12 +17,12 @@ gulp.task 'ng', ['del:tmp'], () ->
 
 gulp.task 'js', ['ng'], (done) ->
   gulp.src 'tmp/app.coffee', read: false
-		.pipe $.browserify
+    .pipe $.browserify
       transform: ['coffeeify']
       extensions: ['.coffee']
     .pipe $.uglify()
     .pipe $.rename 'app.js'
-		.pipe gulp.dest 'dist/js'
+    .pipe gulp.dest 'dist/js'
     .pipe $.connect.reload()
 
 gulp.task 'css', () ->
