@@ -1,0 +1,195 @@
+[
+  {
+    "index": 0,
+    "name": "Marie-Claude, Savard",
+    "age": 18,
+    "picture": "100_0617.JPG",
+    "isAncient": false,
+    "gender": "f",
+    "about": "",
+    "birthdate": "10 février 1997",
+    "year": 5,
+    "fll": false,
+    "teams": [
+      "marketing",
+      "electronic",
+      "mecanique",
+      "strategy"
+    ]
+  },
+  {
+    "index": 1,
+    "name": "David, Génois",
+    "age": 16,
+    "picture": "100_0616.JPG",
+    "isAncient": false,
+    "gender": "m",
+    "about": "",
+    "birthdate": "13 novembre 1998",
+    "year": 4,
+    "fll": true,
+    "teams": [
+      "marketing",
+      "electronic",
+      "mecanique+",
+      "programming",
+      "strategy"
+    ]
+  },
+  {
+    "index": 2,
+    "name": "Olivier, Vincent",
+    "age": 14,
+    "picture": "100_0613.JPG",
+    "isAncient": false,
+    "gender": "m",
+    "about": "",
+    "birthdate": "?",
+    "year": 3,
+    "fll": false,
+    "teams": [
+      "mecanique"
+    ]
+  },
+  {
+    "index": 3,
+    "name": "Anthony, Daunais",
+    "age": 15,
+    "picture": "100_0618.JPG",
+    "isAncient": false,
+    "gender": "m",
+    "about": "",
+    "birthdate": "1 mai 1999",
+    "year": 4,
+    "fll": true,
+    "teams":  [
+      "marketing",
+      "electronic",
+      "mecanique",
+      "strategy"
+    ]
+  },
+  {
+    "index": 4,
+    "name": "Yohan, Lafranchise-Sauvé",
+    "age": 16,
+    "picture": "100_0609.JPG",
+    "isAncient": false,
+    "gender": "m",
+    "about": "",
+    "birthdate": "11 décembre 1998",
+    "year": 4,
+    "fll": true,
+    "teams":  [
+      "marketing",
+      "electronic",
+      "strategy"
+    ]
+  },
+  {
+    "index": 5,
+    "name": "Benjamin, Soucy",
+    "age": 12,
+    "picture": "100_0611.JPG",
+    "isAncient": false,
+    "gender": "m",
+    "about": "",
+    "birthdate": "21 janvier 2002",
+    "year": 1,
+    "fll": false,
+    "teams":  [
+      "marketing",
+      "electronic",
+      "mecanique"
+    ]
+  },
+  {
+    "index": 6,
+    "name": "Jonathan, Handfield",
+    "age": 16,
+    "picture": "100_0612.JPG",
+    "isAncient": false,
+    "gender": "m",
+    "about": "",
+    "birthdate": "7 décembre 1998",
+    "year": 4,
+    "fll": false,
+    "teams":  [
+      "marketing",
+      "electronic",
+      "mecanique",
+      "strategy"
+    ]
+  },
+  {
+    "index": 7,
+    "name": "William, Limoges",
+    "age": 16,
+    "picture": "100_0610.JPG",
+    "isAncient": false,
+    "gender": "m",
+    "about": "",
+    "birthdate": "?",
+    "year": 4,
+    "fll": false,
+    "teams":  [
+      "marketing",
+      "electronic",
+      "mecanique",
+      "strategy"
+    ]
+  },
+  {
+    "index": 8,
+    "name": "Zénon, Roy",
+    "age": 16,
+    "picture": "100_0615.JPG",
+    "isAncient": false,
+    "gender": "m",
+    "about": "",
+    "birthdate": "9 juillet 1998",
+    "year": 5,
+    "fll": false,
+    "teams": [
+      "marketing",
+      "programming",
+      "strategy"
+    ]
+  },
+  {
+    "index": 9,
+    "name": "Kevin, Natola",
+    "age": 16,
+    "picture": "100_0614.JPG",
+    "isAncient": false,
+    "gender": "m",
+    "about": "",
+    "birthdate": "1 juillet 1998",
+    "year": 5,
+    "fll": false,
+    "teams":  [
+      "marketing",
+      "electronic",
+      "mecanique",
+      "programming",
+      "strategy"
+    ]
+  },
+  {
+    "index": 10,
+    "name": "Jérémy, Daunais",
+    "age": 15,
+    "picture": "100_0608.JPG",
+    "isAncient": false,
+    "gender": "m",
+    "about": "",
+    "birthdate": "1 mai 1999",
+    "year": 4,
+    "fll": true,
+    "teams":  [
+      "marketing",
+      "mecanique",
+      "strategy"
+    ]
+  }
+]
