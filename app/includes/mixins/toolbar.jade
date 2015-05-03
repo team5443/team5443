@@ -1,9 +1,8 @@
 doctype html
 mixin toolbar()
+	div(layout="column", layout-fill)
 		md-toolbar(layout="row")
 			.md-toolbar-tools
 				span Les PATenteux
 				span(flex)
-		div(layout="row", flex)
-			div(layout="column", flex)
-				div(ng-view)
+		div(ui-view)

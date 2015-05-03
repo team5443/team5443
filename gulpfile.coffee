@@ -1,83 +1,85 @@
 gulp = require 'gulp'
-gutil = require 'gulp-util'
-concat = require 'gulp-concat'
-jade = require 'gulp-jade'
-stylus = require 'gulp-stylus'
-uglify = require 'gulp-uglify'
-ghpages = require 'gh-pages'
-connect = require 'gulp-connect'
-opn = require 'opn'
+
 fs = require 'fs'
 path = require 'path'
+del = require 'del'
+open = require 'opn'
+gh = require 'gh-pages'
 
-gulp.task 'js', () ->
-  gulp.src 'app/js/**/*.js'
-		.pipe concat 'app.js'
-		.pipe uglify()
-		.pipe gulp.dest('dist/js')
+$ = require('gulp-load-plugins') rename:
+    'gulp-ng-classify':'ng'
 
-gulp.task 'stylus', () ->
+gulp.task 'ng', ['del:tmp'], () ->
+  gulp.src 'app/js/**/*.coffee'
+    .pipe $.concat 'app.coffee'
+    .pipe $.ng()
+    .pipe gulp.dest 'tmp'
+
+gulp.task 'js', ['ng'], (done) ->
+  gulp.src 'tmp/app.coffee', read: false
+		.pipe $.browserify
+      transform: ['coffeeify']
+      extensions: ['.coffee']
+    .pipe $.uglify()
+    .pipe $.rename 'app.js'
+		.pipe gulp.dest 'dist/js'
+    .pipe $.connect.reload()
+
+gulp.task 'css', () ->
   gulp.src 'app/css/app.styl'
-    .pipe stylus compress: true
+    .pipe $.stylus compress: true
     .pipe gulp.dest 'dist/css'
+    .pipe $.connect.reload()
+
+  fs.exists 'dist/css/angular-material.min.css', (there) ->
+    if not there
+      gulp.src 'node_modules/angular-material/angular-material.min.css'
+        .pipe gulp.dest 'dist/css'
+  return
 
 gulp.task 'jade', () ->
   gulp.src 'app/index.jade'
-    .pipe jade()
+    .pipe $.jade()
     .pipe gulp.dest 'dist'
+    .pipe $.connect.reload()
+
+gulp.task 'res', () ->
+  gulp.src 'app/res/**/*'
+    .pipe gulp.dest 'dist/res'
 
 gulp.task 'jade:views', () ->
   fs.readdir 'app/views', (err, views) ->
-    if err then console.log err else compile view for view in views
-    return
+    if err then console.log err else compile view for view in views; return
 
   compile = (view) ->
     gulp.src "app/views/#{view}/index.jade"
-      .pipe jade()
+      .pipe $.jade()
       .pipe gulp.dest "dist/views/#{view}"
-
+      .pipe $.connect.reload()
   return
 
-gulp.task 'copy', () ->
-  fs.readdir 'app/vendor', (err, dep) ->
-    if err then console.log err else for dir in dep
-      if dir is 'angular-ui-router'
-        gulp.src "app/vendor/#{dir}/release/#{dir}.min.js"
-          .pipe gulp.dest 'dist/vendor'
-      else copy dir
-    return
+gulp.task 'del:tmp', (done) ->
+  del ['tmp'], done; return
 
-  copy = (dir) ->
-    fs.readdir "app/vendor/#{dir}", (err, files) ->
-      if err then console.log err else for file in files
-        if file.indexOf '.min' > -1
-          switch file.split('.').pop()
-            when 'js', 'css', 'map'
-              gulp.src "app/vendor/#{dir}/#{file}"
-                .pipe gulp.dest 'dist/vendor'
-            else return
-    return
-  return
+gulp.task 'clean', (done) ->
+  del ['dist'], done; return
 
 gulp.task 'watch', () ->
   gulp.watch ['app/index.jade', 'app/includes/**/*.jade'], ['jade']
-  gulp.watch 'app/css/**/*.styl', ['stylus']
-  gulp.watch 'app/js/**/*.js', ['js']
-  gulp.watch 'app/views/**/*.jade', ['jade:views']
-  return
+  gulp.watch 'app/css/**/*.styl', ['css']
+  gulp.watch 'app/js/**/*.coffee', ['js']
+  gulp.watch 'app/views/**/*.jade', ['jade:views']; return
 
 gulp.task 'connect', ['build'], (done) ->
-  connect.server
+  $.connect.server
     root: 'dist'
     livereload: true
 
-  opn 'https://localhost:8080', done
-  return
+  open 'http://localhost:8080', done; return
 
 gulp.task 'deploy', ['build'], (done) ->
-  ghpages.publish path.join(__dirname, 'dist'), logger: gutil.log, done
-  return
+  gh.publish path.join(__dirname, 'dist'), logger: gutil.log, done; return
 
-gulp.task 'build', ['js', 'jade', 'jade:views', 'stylus', 'copy']
+gulp.task 'build', ['clean', 'js', 'jade', 'jade:views', 'css', 'res']
 gulp.task 'serve', ['connect', 'watch']
 gulp.task 'default', ['build']
