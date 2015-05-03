@@ -5,9 +5,16 @@ path = require 'path'
 del = require 'del'
 open = require 'opn'
 gh = require 'gh-pages'
+minimist = require 'minimist'
 
 $ = require('gulp-load-plugins') rename:
     'gulp-ng-classify':'ng'
+
+knownOpts =
+  string: 'env'
+  default: env: process.env.NODE_ENV or 'dist'
+
+options = minimist process.argv.slice(2), knownOpts
 
 gulp.task 'ng', ['del:tmp'], () ->
   gulp.src 'app/js/**/*.coffee'
@@ -15,12 +22,12 @@ gulp.task 'ng', ['del:tmp'], () ->
     .pipe $.ng()
     .pipe gulp.dest 'tmp'
 
-gulp.task 'js', ['ng'], (done) ->
+gulp.task 'js', ['ng'], () -> # TODO: use watchify for faster builds
   gulp.src 'tmp/app.coffee', read: false
     .pipe $.browserify
       transform: ['coffeeify']
       extensions: ['.coffee']
-    .pipe $.uglify()
+    .pipe $.if options.env is 'dist', $.uglify()
     .pipe $.rename 'app.js'
     .pipe gulp.dest 'dist/js'
     .pipe $.connect.reload()
