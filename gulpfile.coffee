@@ -5,6 +5,7 @@ path = require 'path'
 del = require 'del'
 open = require 'opn'
 gh = require 'gh-pages'
+nib = require 'nib'
 minimist = require 'minimist'
 
 $ = require('gulp-load-plugins') rename:
@@ -34,7 +35,9 @@ gulp.task 'js', ['ng'], () -> # TODO: use watchify for faster builds
 
 gulp.task 'css', () ->
   gulp.src 'app/css/app.styl'
-    .pipe $.stylus compress: true
+    .pipe $.stylus
+      compress: true
+      use: [nib()]
     .pipe gulp.dest 'dist/css'
     .pipe $.connect.reload()
 
